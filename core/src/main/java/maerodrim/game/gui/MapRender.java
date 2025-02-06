@@ -33,16 +33,16 @@ public class MapRender {
     }
 
     private Color getColorForHeight(final float height) {
+        if (height < 0.35) return new Color(10 / 255f, 50 / 255f, 150 / 255f, 1f); // Глубокая вода
         if (height < 0.45) return new Color(20 / 255f, 80 / 255f, 190 / 255f, 1f); // Глубокая вода
-        if (height < 0.5) return new Color(100 / 255f, 140 / 255f, 230 / 255f, 1f); // Мелководье
-        if (height < 0.55) return new Color(194 / 255f, 178 / 255f, 128 / 255f, 1f); // Песок (пляж)
-        if (height < 0.65) return new Color(35 / 255f, 225 / 255f, 70 / 255f, 1f); // Трава
-        if (height < 0.7) return new Color(25 / 255f, 200 / 255f, 60 / 255f, 1f); // Луга
-        if (height < 0.8) return new Color(140 / 255f, 75 / 255f, 30 / 255f, 1f); // Земля (горы у подножия)
-        if (height < 0.85) return new Color(120 / 255f, 120 / 255f, 120 / 255f, 1f); // Каменистая местность
-        if (height < 0.95) return new Color(200 / 255f, 200 / 255f, 200 / 255f, 1f); // Высокогорье
+        if (height < 0.48) return new Color(100 / 255f, 140 / 255f, 230 / 255f, 1f); // Мелководье
+        if (height < 0.50) return new Color(194 / 255f, 178 / 255f, 128 / 255f, 1f); // Песок (пляж)
+        if (height < 0.60) return new Color(35 / 255f, 225 / 255f, 70 / 255f, 1f); // Трава
+        if (height < 0.83) return new Color(25 / 255f, 200 / 255f, 60 / 255f, 1f); // Луга
+        if (height < 0.87) return new Color(120 / 255f, 70 / 255f, 40 / 255f, 1f); // Земля (горы у подножия)
+        if (height < 0.91) return new Color(120 / 255f, 120 / 255f, 120 / 255f, 1f); // Каменистая местность
+        if (height < 0.97) return new Color(200 / 255f, 200 / 255f, 200 / 255f, 1f); // Высокогорье
         return new Color(255 / 255f, 255 / 255f, 255 / 255f, 1f); // Снег
     }
-
 
 }

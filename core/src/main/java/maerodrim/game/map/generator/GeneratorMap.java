@@ -37,17 +37,13 @@ public class GeneratorMap {
 
     public void generate() {
         final NoiseGenerator noiseGenerator = new NoiseGenerator();
-        noiseStage(mapHeights, noiseGenerator, 48, 0.9f);
+        noiseStage(mapHeights, noiseGenerator, 100, 1.5f);
+        noiseStage(mapHeights, noiseGenerator, 20, 0.17f);
+        noiseStage(mapHeights, noiseGenerator, 10, 0.1f);
+        applyMultiIslandShape(mapHeights, 10, SEED);
+        noiseStage(mapHeights, noiseGenerator, 8, 0.05f);
         applyIslandShape(mapHeights);
         normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 32, 0.8f);
-        applyMultiIslandShape(mapHeights, 5, SEED + SHIFT);
-        normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 8, 0.1f);
-        normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 4, 0.1f);
-        normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 2, 0.025f);
     }
 
     private void normalizeGrid(Grid grid) {
@@ -98,7 +94,7 @@ public class GeneratorMap {
         int width = grid.getWidth();
         int height = grid.getHeight();
 
-        Random random = new Random(seed);
+        Random random = new Random(seed + SHIFT++);
         List<float[]> centers = new ArrayList<>();
 
         for (int i = 0; i < islandCount; i++) {
