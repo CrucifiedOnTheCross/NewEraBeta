@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.czyzby.noise4j.map.generator.util.Generators;
 import maerodrim.game.gui.MapRender;
 import maerodrim.game.map.Map;
 import maerodrim.game.map.generator.GeneratorMap;
@@ -19,17 +18,20 @@ public class Main extends ApplicationAdapter {
 
     private SpriteBatch batch;
     private Texture texture;
+    private GeneratorMap generator;
     private Map map;
+    private float islandStrength = 0.7f; // the global variable
 
     @Override
     public void create() {
-        GeneratorMap generatorMap = new GeneratorMap(WIDTH, HEIGHT, Generators.rollSeed());
-        generatorMap.generate();
-        Map map = new Map(generatorMap.getMapHeights());
-        MapRender mapRenderer = new MapRender(map, WIDTH, HEIGHT);
-
-        texture = mapRenderer.render();
         batch = new SpriteBatch();
+
+        generator = new GeneratorMap(2560, 1440, 1800); // Generate at larger resolution
+        generator.setIslandStrange(islandStrength);
+        generator.generate();
+        map = new Map(generator.getMapHeights());
+
+        texture = new MapRender(map, 2560, 1440).render(); // Create texture at 2560x1440 resolution
     }
 
     @Override
@@ -37,7 +39,10 @@ public class Main extends ApplicationAdapter {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(texture, 0f, 0f);
+
+        // Scale the texture to fit the screen resolution
+        batch.draw(texture, 0, 0, WIDTH, HEIGHT);
+
         batch.end();
     }
 

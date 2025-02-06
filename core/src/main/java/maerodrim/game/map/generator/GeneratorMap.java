@@ -2,7 +2,6 @@ package maerodrim.game.map.generator;
 
 import com.github.czyzby.noise4j.map.Grid;
 import com.github.czyzby.noise4j.map.generator.noise.NoiseGenerator;
-import com.github.czyzby.noise4j.map.generator.util.Generators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,8 @@ public class GeneratorMap {
 
     private int WIDTH, HEIGHT;
     private int SEED;
+    private int SHIFT;
+    private float islandStrange;
 
     private Grid mapHeights;
 
@@ -19,33 +20,34 @@ public class GeneratorMap {
         WIDTH = width;
         HEIGHT = height;
         SEED = seed;
+        islandStrange = 1.0f;
 
         mapHeights = new Grid(WIDTH, HEIGHT);
     }
 
+    private void noiseStage(final Grid grid,
+                            final NoiseGenerator noiseGenerator,
+                            final int radius,
+                            final float modifier) {
+        noiseGenerator.setRadius(radius);
+        noiseGenerator.setModifier(modifier);
+        noiseGenerator.setSeed(SEED + SHIFT++);
+        noiseGenerator.generate(grid);
+    }
+
     public void generate() {
         final NoiseGenerator noiseGenerator = new NoiseGenerator();
-        noiseStage(mapHeights, noiseGenerator, 32, 0.6f);
-        applyMultiIslandShape(mapHeights, 10, Generators.rollSeed());
+        noiseStage(mapHeights, noiseGenerator, 48, 0.9f);
         applyIslandShape(mapHeights);
         normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 16, 0.2f);
+        noiseStage(mapHeights, noiseGenerator, 32, 0.8f);
+        applyMultiIslandShape(mapHeights, 5, SEED + SHIFT);
         normalizeGrid(mapHeights);
         noiseStage(mapHeights, noiseGenerator, 8, 0.1f);
         normalizeGrid(mapHeights);
         noiseStage(mapHeights, noiseGenerator, 4, 0.1f);
         normalizeGrid(mapHeights);
-        noiseStage(mapHeights, noiseGenerator, 1, 0.05f);
-    }
-
-    private static void noiseStage(final Grid grid,
-                                   final NoiseGenerator noiseGenerator,
-                                   final int radius,
-                                   final float modifier) {
-        noiseGenerator.setRadius(radius);
-        noiseGenerator.setModifier(modifier);
-        noiseGenerator.setSeed(Generators.rollSeed());
-        noiseGenerator.generate(grid);
+        noiseStage(mapHeights, noiseGenerator, 2, 0.025f);
     }
 
     private void normalizeGrid(Grid grid) {
@@ -85,7 +87,7 @@ public class GeneratorMap {
                 float distY = (y - centerY) / (height / 2f);
                 float distance = (float) Math.sqrt(distX * distX + distY * distY);
 
-                float islandFactor = Math.max(0f, 1f - distance * 0.5f);
+                float islandFactor = (float) Math.max(0f, 1f - distance * islandStrange);
 
                 grid.set(x, y, grid.get(x, y) * islandFactor);
             }
@@ -116,8 +118,8 @@ public class GeneratorMap {
                     minDistance = Math.min(minDistance, distance);
                 }
 
-                float islandFactor = Math.max(0f, 1f - minDistance * 0.2f);
-                grid.set(x, y, grid.get(x, y) * islandFactor);
+                float islandFactor = Math.max(0f, 1f - minDistance * islandStrange);
+                grid.set(x, y, (float) (grid.get(x, y) * islandFactor));
             }
         }
     }
@@ -126,4 +128,11 @@ public class GeneratorMap {
         return mapHeights;
     }
 
+    public float getIslandStrange() {
+        return islandStrange;
+    }
+
+    public void setIslandStrange(float islandStrange) {
+        this.islandStrange = islandStrange;
+    }
 }
