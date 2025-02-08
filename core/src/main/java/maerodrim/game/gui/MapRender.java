@@ -24,7 +24,7 @@ public class MapRender {
 
     public Texture render() {
         Grid grid = map.getMapHeights();
-        int[][] provinceMap = map.getProvinceMap();
+        int[][] provinceMap = map.getMapProvince();
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
 
         for (int x = 0; x < grid.getWidth(); x++) {
@@ -33,14 +33,14 @@ public class MapRender {
                 pixmap.drawPixel(x, y, Color.rgba8888(getColorForHeight(height)));
 
                 if (isBorder(x, y, provinceMap)) {
-                    pixmap.drawPixel(x, y, Color.rgba8888(Color.BLACK));
+                    pixmap.drawPixel(x, y, Color.rgba8888(Color.WHITE));
                 }
 
                 // Закрашиваем провинции уникальными цветами с прозрачностью 0.25
                 int provinceId = provinceMap[x][y];
                 Color provinceColor = getProvinceColor(provinceId);
                 pixmap.setColor(provinceColor);
-                pixmap.fillRectangle(x, y, 1, 1); // Заполняем пиксель провинцией
+                pixmap.fillRectangle(x, y, 1, 1);
             }
         }
 
@@ -48,9 +48,29 @@ public class MapRender {
     }
 
     private Color getColorForHeight(final float height) {
-        if (height < 0.48) return new Color(100 / 255f, 140 / 255f, 230 / 255f, 1f); // Мелководье
-        return new Color(255 / 255f, 255 / 255f, 255 / 255f, 1f); // Снег
+        if (height < 0.50f) {
+            // Вода: темно-синий → светло-синий
+            return interpolateColor(height, 0.0f, 0.50f, new Color(10 / 255f, 30 / 255f, 80 / 255f, 1f), new Color(70 / 255f, 130 / 255f, 180 / 255f, 1f));
+        } else if (height < 0.8f) {
+            // Земля: зелёный → коричневый
+            return interpolateColor(height, 0.50f, 0.8f, new Color(34 / 255f, 139 / 255f, 34 / 255f, 1f), new Color(19 / 255f, 112 / 255f, 20 / 255f, 1f));
+        } else if (height < 0.95f) {
+            // Горы: коричневый → серый
+            return interpolateColor(height, 0.8f, 0.95f, new Color(139 / 255f, 69 / 255f, 19 / 255f, 1f), new Color(169 / 255f, 169 / 255f, 169 / 255f, 1f));
+        } else {
+            // Снег: серый → белый
+            return interpolateColor(height, 0.95f, 1.0f, new Color(169 / 255f, 169 / 255f, 169 / 255f, 1f), new Color(255 / 255f, 255 / 255f, 255 / 255f, 1f));
+        }
     }
+
+    private Color interpolateColor(float height, float minHeight, float maxHeight, Color start, Color end) {
+        float ratio = (height - minHeight) / (maxHeight - minHeight);
+        float r = start.r + (end.r - start.r) * ratio;
+        float g = start.g + (end.g - start.g) * ratio;
+        float b = start.b + (end.b - start.b) * ratio;
+        return new Color(r, g, b, 1f);
+    }
+
 
     private boolean isBorder(int x, int y, int[][] provinceMap) {
         int currentProvince = provinceMap[x][y];
@@ -80,6 +100,6 @@ public class MapRender {
         float r = (float) Math.random();
         float g = (float) Math.random();
         float b = (float) Math.random();
-        return new Color(r, g, b, 0.25f); // Сгенерированный цвет с полной непрозрачностью
+        return new Color(r, g, b, 0.15f); // Сгенерированный цвет с полной непрозрачностью
     }
 }

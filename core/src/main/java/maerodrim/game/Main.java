@@ -5,68 +5,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 import maerodrim.game.gui.MapRender;
 import maerodrim.game.map.Map;
 import maerodrim.game.map.generator.GeneratorMap;
+import maerodrim.game.map.generator.GeneratorProvince;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
- */
 public class Main extends ApplicationAdapter {
-    private final int WIDTH = 1920;
-    private final int HEIGHT = 1080;
-
     private SpriteBatch batch;
     private Texture texture;
-    private GeneratorMap generator;
-    private Map map;
-    private float islandStrength = 0.6f; // Global variable
-
-    private int seed = 1000; // Начальный сид
-    private final int seedMin = 1000;
-    private final int seedMax = 5000;
-    private final int seedStep = 100;
-
-    private long lastUpdateTime;
-    private final long updateInterval = 500; // 2 секунды
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        generateMap();
-        lastUpdateTime = TimeUtils.millis();
+        texture = generateMap();
     }
 
     @Override
     public void render() {
-        if (TimeUtils.millis() - lastUpdateTime > updateInterval) {
-            lastUpdateTime = TimeUtils.millis();
-            updateMap();
-        }
-
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(texture, 0, 0, WIDTH, HEIGHT);
+        batch.draw(texture, 0, 0);
         batch.end();
     }
 
-    private void generateMap() {
-        generator = new GeneratorMap(2560, 1440, seed);
-        generator.setIslandStrange(islandStrength);
+    private Texture generateMap() {
+        GeneratorMap generator = new GeneratorMap(2560, 1440, 2000);
         generator.generate();
-        map = new Map(generator.getMapHeights());
-
-        if (texture != null) texture.dispose();
-        texture = new MapRender(map, 2560, 1440).render();
-    }
-
-    private void updateMap() {
-        seed += seedStep;
-        if (seed > seedMax) seed = seedMin; // Зацикливание
-
-        Gdx.app.postRunnable(this::generateMap); // Безопасное обновление в главном потоке
+        GeneratorProvince generatorProvince = new GeneratorProvince(generator.getMapHeights());
+        generatorProvince.generateProvinces(300, 1500);
+        Map map = new Map(generator.getMapHeights(), generatorProvince.getProvinceMap());
+        return new MapRender(map, 2560, 1440).render();
     }
 
     @Override
