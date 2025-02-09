@@ -1,4 +1,4 @@
 package maerodrim.game.model.session.map.resources;
 
-public class NaturalResources {
+public enum NaturalResources {
 }

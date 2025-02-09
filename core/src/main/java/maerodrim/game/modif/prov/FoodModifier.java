@@ -5,16 +5,18 @@ import maerodrim.game.model.ClimateType;
 import maerodrim.game.model.RecalculationTime;
 import maerodrim.game.model.player.Player;
 import maerodrim.game.model.session.map.Provinces;
+import maerodrim.game.model.session.map.resources.FoodResources;
 import maerodrim.game.modif.Modifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class FoodModifier extends Modifier {
     Logger logger = LoggerFactory.getLogger(FoodModifier.class);
-    protected HashMap<ClimateType, Double> climatModifer;
-    protected HashMap<ClimateType, Double> landscapeModifer;
+    protected HashMap<ClimateType, Double> climateModifier;
+    protected HashMap<ClimateType, Double> landscapeModifier;
 
     public FoodModifier() {
         super("food-modifier", RecalculationTime.DAILY);
@@ -22,8 +24,8 @@ public class FoodModifier extends Modifier {
 
     @Override
     public Double getRecalculationModifier(Provinces provinces) {
-
-        return 1 + (climatModifer.get(provinces.getClimate()) * landscapeModifer.get(provinces.getLandscape()));
+        List<FoodResources> foodResources = provinces.getProvinceResources().getFoodResources();
+        return 1 + (climateModifier.get(provinces.getClimate()) * landscapeModifier.get(provinces.getLandscape()));
     }
 
     @Override
@@ -34,6 +36,6 @@ public class FoodModifier extends Modifier {
 
     @Override
     public Double getRecalculationModifier(Provinces provinces, Player player) {
-        return 1 + (climatModifer.get(provinces.getClimate()) * landscapeModifer.get(provinces.getLandscape()));
+        return getRecalculationModifier(provinces);
     }
 }

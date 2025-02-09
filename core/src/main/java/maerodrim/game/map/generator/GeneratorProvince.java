@@ -6,7 +6,7 @@ import java.util.*;
 
 public class GeneratorProvince {
 
-    private static final float WATER_LEVEL = 0.46f;
+    private static final float WATER_LEVEL = 0.48f;
     private static final int LAND_PASS_COST = 1;
     private static final int SEA_PASS_COST = 2; // Моря заполняются чуть медленнее
     private final Grid mapHeights;
