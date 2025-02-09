@@ -1,9 +1,9 @@
-package maerodrim.game.model.map;
+package maerodrim.game.model.session.map;
 
-import maerodrim.game.model.base.Culture;
-import maerodrim.game.model.base.Religion;
-import maerodrim.game.model.map.resources.ProvinceResources;
-import maerodrim.game.model.settlement.Settlement;
+import maerodrim.game.model.player.base.Culture;
+import maerodrim.game.model.player.base.Religion;
+import maerodrim.game.model.session.map.resources.ProvinceResources;
+import maerodrim.game.model.player.settlement.Settlement;
 
 import java.util.UUID;
 

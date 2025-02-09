@@ -1,7 +1,7 @@
-package maerodrim.game.model.settlement;
+package maerodrim.game.model.player.settlement;
 
 
-import maerodrim.game.model.tech.TechnologicalProgress;
+import maerodrim.game.model.player.tech.TechnologicalProgress;
 
 import java.util.UUID;
 

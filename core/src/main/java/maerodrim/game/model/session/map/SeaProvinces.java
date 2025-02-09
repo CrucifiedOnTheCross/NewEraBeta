@@ -1,6 +1,6 @@
-package maerodrim.game.model.map;
+package maerodrim.game.model.session.map;
 
-import maerodrim.game.model.map.resources.ProvinceResources;
+import maerodrim.game.model.session.map.resources.ProvinceResources;
 
 import java.util.UUID;
 

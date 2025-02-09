@@ -1,4 +1,4 @@
-package maerodrim.game.model.map;
+package maerodrim.game.model.session.map;
 
 import java.util.Map;
 

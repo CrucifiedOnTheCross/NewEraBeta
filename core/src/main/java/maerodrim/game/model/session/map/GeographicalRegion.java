@@ -1,10 +1,10 @@
-package maerodrim.game.model.base;
+package maerodrim.game.model.session.map;
 
 import java.util.List;
 import java.util.UUID;
 
-public class Player {
+public class GeographicalRegion {
     private String name;
-    private UUID id;
     private List<UUID> idProvincesList;
+    private boolean isSea;
 }

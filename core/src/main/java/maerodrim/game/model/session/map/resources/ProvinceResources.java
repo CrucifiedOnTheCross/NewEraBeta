@@ -1,4 +1,4 @@
-package maerodrim.game.model.map.resources;
+package maerodrim.game.model.session.map.resources;
 
 import java.util.List;
 
